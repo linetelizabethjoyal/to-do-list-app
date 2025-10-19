@@ -1,34 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <title>BMI Calculator</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>BMI Calculator</h1>
-
-    <form action="/calculate" method="POST">
-      <label for="height">Height (cm)</label>
-      <input type="number" step="0.1" min="0" id="height" name="height" required>
-
-      <label for="weight">Weight (kg)</label>
-      <input type="number" step="0.1" min="0" id="weight" name="weight" required>
-
-      <button type="submit">Calculate</button>
+    <h1>To-Do List</h1>
+    <form action="/add" method="post">
+        <input type="text" name="task" placeholder="Enter a new task">
+        <button type="submit">Add</button>
     </form>
 
-    {% if error %}
-      <div class="msg error">{{ error }}</div>
-    {% endif %}
-
-    {% if bmi %}
-      <div class="result {{ category|lower }}">
-        <p>Your BMI: <strong>{{ bmi }}</strong></p>
-        <p>Category: <strong>{{ category }}</strong></p>
-      </div>
-    {% endif %}
-  </div>
+    <ul>
+        {% for i, task in enumerate(tasks) %}
+        <li>
+            {{ task }}
+            <a href="/delete/{{ i }}">Delete</a>
+        </li>
+        {% endfor %}
+    </ul>
 </body>
 </html>

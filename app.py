@@ -1,35 +1,25 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
+tasks = []  # temporary in-memory task storage
+
 @app.route('/')
-def home():
-    return render_template('index.html')
+def index():
+    return render_template('index.html', tasks=tasks)
 
-@app.route('/calculate', methods=['POST'])
-def calculate_bmi():
-    try:
-        height_cm = float(request.form.get('height', 0))
-        weight = float(request.form.get('weight', 0))
-        if height_cm <= 0 or weight <= 0:
-            raise ValueError("Height and weight must be positive numbers.")
+@app.route('/add', methods=['POST'])
+def add_task():
+    task = request.form.get('task')
+    if task:
+        tasks.append(task)
+    return redirect(url_for('index'))
 
-        height_m = height_cm / 100.0
-        bmi = round(weight / (height_m ** 2), 2)
-
-        if bmi < 18.5:
-            category = "Underweight"
-        elif 18.5 <= bmi < 24.9:
-            category = "Normal"
-        elif 25 <= bmi < 29.9:
-            category = "Overweight"
-        else:
-            category = "Obese"
-
-        return render_template('index.html', bmi=bmi, category=category)
-    except Exception as e:
-        # Simple error handling: show message in template
-        return render_template('index.html', error=str(e))
+@app.route('/delete/<int:task_id>')
+def delete_task(task_id):
+    if 0 <= task_id < len(tasks):
+        tasks.pop(task_id)
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True)
