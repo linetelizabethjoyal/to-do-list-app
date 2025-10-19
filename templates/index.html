@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BMI Calculator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="card">
+    <h1>BMI Calculator</h1>
+
+    <form action="{{ url_for('calculate') }}" method="post" class="form">
+      <label>
+        Weight (kg)
+        <input type="number" step="0.1" name="weight" required value="{{ weight or '' }}">
+      </label>
+
+      <label>
+        Height (cm)
+        <input type="number" step="0.1" name="height" required value="{{ height or '' }}">
+      </label>
+
+      <button type="submit">Check BMI</button>
+    </form>
+
+    {% if result %}
+      <section class="result {{ result.class }}">
+        {% if result.bmi %}
+          <p class="value">BMI: <strong>{{ result.bmi }}</strong></p>
+          <p class="cat">{{ result.category }}</p>
+        {% else %}
+          <p class="cat">Invalid input — please enter positive numbers.</p>
+        {% endif %}
+      </section>
+    {% endif %}
+
+    <small class="hint">
+      Categories: Underweight &lt; 18.5 — Normal 18.5–24.9 — Overweight 25–29.9 — Obese ≥ 30
+    </small>
+  </main>
+</body>
+</html>
