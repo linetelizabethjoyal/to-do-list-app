@@ -1,43 +1,34 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8"/>
   <title>BMI Calculator</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <main class="card">
+  <div class="container">
     <h1>BMI Calculator</h1>
 
-    <form action="{{ url_for('calculate') }}" method="post" class="form">
-      <label>
-        Weight (kg)
-        <input type="number" step="0.1" name="weight" required value="{{ weight or '' }}">
-      </label>
+    <form action="/calculate" method="POST">
+      <label for="height">Height (cm)</label>
+      <input type="number" step="0.1" min="0" id="height" name="height" required>
 
-      <label>
-        Height (cm)
-        <input type="number" step="0.1" name="height" required value="{{ height or '' }}">
-      </label>
+      <label for="weight">Weight (kg)</label>
+      <input type="number" step="0.1" min="0" id="weight" name="weight" required>
 
-      <button type="submit">Check BMI</button>
+      <button type="submit">Calculate</button>
     </form>
 
-    {% if result %}
-      <section class="result {{ result.class }}">
-        {% if result.bmi %}
-          <p class="value">BMI: <strong>{{ result.bmi }}</strong></p>
-          <p class="cat">{{ result.category }}</p>
-        {% else %}
-          <p class="cat">Invalid input — please enter positive numbers.</p>
-        {% endif %}
-      </section>
+    {% if error %}
+      <div class="msg error">{{ error }}</div>
     {% endif %}
 
-    <small class="hint">
-      Categories: Underweight &lt; 18.5 — Normal 18.5–24.9 — Overweight 25–29.9 — Obese ≥ 30
-    </small>
-  </main>
+    {% if bmi %}
+      <div class="result {{ category|lower }}">
+        <p>Your BMI: <strong>{{ bmi }}</strong></p>
+        <p>Category: <strong>{{ category }}</strong></p>
+      </div>
+    {% endif %}
+  </div>
 </body>
 </html>
